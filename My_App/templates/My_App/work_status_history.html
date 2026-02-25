@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Work Status History | My Work Tracker{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Work Status</h1>
+    <a class="btn btn-primary btn-sm" href="{% url 'work_status_add' %}">Add Today's Work</a>
+  </div>
+
+  {% if statuses %}
+    <div class="border rounded bg-white p-3" style="max-height: 72vh; overflow: auto;">
+      <div class="row g-3">
+        {% for status in statuses %}
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="fw-semibold">{{ status.date }}</div>
+                <div class="mt-2" style="white-space: pre-wrap;">{{ status.work_done }}</div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-secondary" role="alert">
+      No work statuses yet. Click <a href="{% url 'work_status_add' %}" class="alert-link">Add New Work Status</a> to get started.
+    </div>
+  {% endif %}
+{% endblock %}

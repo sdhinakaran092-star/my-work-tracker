@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Work | My Work Tracker{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Pending Work</h1>
+    <a class="btn btn-primary btn-sm" href="{% url 'pending_add' %}">Add Pending Work</a>
+  </div>
+
+  {% if tasks %}
+    <div class="row g-3">
+      {% for task in tasks %}
+        <div class="col-12">
+          <div class="card shadow-sm rounded-4">
+            <div class="card-body">
+              <div class="d-flex align-items-start justify-content-between gap-3">
+                <div>
+                  <div class="fw-semibold">{{ task.title }}</div>
+                  {% if task.description %}
+                    <div class="text-secondary mt-1" style="white-space: pre-wrap;">{{ task.description }}</div>
+                  {% endif %}
+                  {% if task.due_at %}
+                    <div class="small text-secondary mt-2">Due: {{ task.due_at|date:"Y-m-d H:i" }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="d-flex flex-column gap-2">
+                  <form method="post" action="{% url 'pending_remind' task.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary btn-sm">Send Reminder</button>
+                  </form>
+
+                  <form method="post" action="{% url 'pending_done' task.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success btn-sm">Mark Done</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-secondary" role="alert">
+      No pending work 🎉
+      <div class="mt-2">
+        <a href="{% url 'pending_add' %}" class="btn btn-primary btn-sm">Add your first task</a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

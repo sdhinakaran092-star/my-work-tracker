@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance History | My Work Tracker{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">Attendance History</h1>
+    <a class="btn btn-primary btn-sm" href="{% url 'attendance_take' %}">Take Attendance</a>
+  </div>
+
+  {% if records %}
+    <div class="card shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0 align-middle">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 220px;">Date &amp; Time</th>
+              <th scope="col" style="width: 120px;">Status</th>
+              <th scope="col">Photo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rec in records %}
+              <tr>
+                <td>{{ rec.timestamp|date:"Y-m-d H:i" }}</td>
+                <td>
+                  {% if rec.status == 'Present' %}
+                    <span class="badge text-bg-success">Present</span>
+                  {% else %}
+                    <span class="badge text-bg-danger">Absent</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if rec.photo %}
+                    <a href="{{ rec.photo.url }}" target="_blank" rel="noreferrer">
+                      <img
+                        src="{{ rec.photo.url }}"
+                        alt="Attendance photo"
+                        class="img-thumbnail"
+                        style="width: 96px; height: 72px; object-fit: cover;"
+                      />
+                    </a>
+                  {% else %}
+                    <span class="text-secondary">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-secondary" role="alert">
+      No attendance records yet. Click <a href="{% url 'attendance_take' %}" class="alert-link">Take Attendance</a> to add one.
+    </div>
+  {% endif %}
+{% endblock %}

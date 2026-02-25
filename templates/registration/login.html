@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Login | My Work Tracker{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-5">
+      <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+          <h1 class="h4 mb-1">Login</h1>
+          <p class="text-secondary mb-4">Sign in to continue.</p>
+
+          {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+              Please check your username and password.
+            </div>
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label" for="id_username">Username</label>
+              <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" class="form-control" required id="id_username" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="id_password">Password</label>
+              <input type="password" name="password" autocomplete="current-password" class="form-control" required id="id_password" />
+            </div>
+
+            {% if next %}
+              <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary w-100">Sign in</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-secondary small mt-3">
+         
+      </div>
+    </div>
+  </div>
+{% endblock %}
