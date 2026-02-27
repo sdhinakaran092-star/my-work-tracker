@@ -14,116 +14,199 @@
 
     <style>
       body { padding-top: 72px; }
+
+      body.app-theme {
+        background-image:
+          linear-gradient(rgba(8, 20, 55, .55), rgba(8, 20, 55, .55)),
+          url("https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=2400&q=80");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+
+      main.app-surface {
+        background: rgba(255, 255, 255, .10);
+        border: 1px solid rgba(255, 255, 255, .16);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-radius: 18px;
+      }
+
+      main.app-surface,
+      main.app-surface h1,
+      main.app-surface h2,
+      main.app-surface h3,
+      main.app-surface h4,
+      main.app-surface h5,
+      main.app-surface h6 {
+        color: rgba(255, 255, 255, .96);
+      }
+
+      main.app-surface .text-secondary,
+      main.app-surface .form-text {
+        color: rgba(255, 255, 255, .65) !important;
+      }
+
+      main.app-surface .card,
+      main.app-surface .bg-white,
+      main.app-surface .alert,
+      main.app-surface .list-group-item {
+        background: rgba(255, 255, 255, .12) !important;
+        border-color: rgba(255, 255, 255, .18) !important;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
+      main.app-surface .table {
+        --bs-table-bg: transparent;
+        --bs-table-color: rgba(255, 255, 255, .92);
+        --bs-table-hover-bg: rgba(255, 255, 255, .06);
+        --bs-table-hover-color: rgba(255, 255, 255, .96);
+        --bs-table-border-color: rgba(255, 255, 255, .14);
+      }
+
+      main.app-surface .btn-outline-dark {
+        --bs-btn-color: rgba(255, 255, 255, .90);
+        --bs-btn-border-color: rgba(255, 255, 255, .35);
+        --bs-btn-hover-bg: rgba(255, 255, 255, .12);
+        --bs-btn-hover-border-color: rgba(255, 255, 255, .50);
+        --bs-btn-hover-color: rgba(255, 255, 255, .96);
+        --bs-btn-focus-shadow-rgb: 255, 255, 255;
+      }
+
+      main.app-surface .border {
+        border-color: rgba(255, 255, 255, .18) !important;
+      }
+
+      main.app-surface .dropdown-menu {
+        background: rgba(20, 24, 40, .92);
+        border-color: rgba(255, 255, 255, .12);
+      }
+
+      main.app-surface .dropdown-item {
+        color: rgba(255, 255, 255, .92);
+      }
+
+      main.app-surface .dropdown-item:hover,
+      main.app-surface .dropdown-item:focus {
+        background: rgba(255, 255, 255, .10);
+        color: rgba(255, 255, 255, .96);
+      }
     </style>
+
+    {% block body_style %}{% endblock %}
 
     {% block extra_head %}{% endblock %}
   </head>
-  <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div class="container">
-        <a class="navbar-brand fw-semibold" href="{% url 'home' %}">My Work Tracker</a>
+  <body class="{% block body_class %}app-theme{% endblock %}">
+    {% block navbar %}
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand fw-semibold" href="{% url 'home' %}">My Work Tracker</a>
 
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNavbar"
-          aria-controls="mainNavbar"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-        <div class="collapse navbar-collapse" id="mainNavbar">
-          <ul class="navbar-nav ms-auto">
-            {% if user.is_authenticated %}
-              {% if request.resolver_match and request.resolver_match.url_name != 'home' %}
+          <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto">
+              {% if user.is_authenticated %}
+                {% if request.resolver_match and request.resolver_match.url_name != 'home' %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                  </li>
+                {% endif %}
+
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Work Status
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'work_status_add' %}">Add Today's Work</a></li>
+                    <li><a class="dropdown-item" href="{% url 'work_status_list' %}">View Work Status</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Pending Work
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'pending_list' %}">View Pending Work</a></li>
+                    <li><a class="dropdown-item" href="{% url 'pending_add' %}">Add Pending Work</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Attendance
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'attendance_take' %}">Take Attendance</a></li>
+                    <li><a class="dropdown-item" href="{% url 'attendance_history' %}">Attendance History</a></li>
+                  </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Profile
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><span class="dropdown-item-text text-secondary">{{ user.username }}</span></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li>
+                      <form method="post" action="{% url 'logout' %}" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item">Logout</button>
+                      </form>
+                    </li>
+                  </ul>
+                </li>
+              {% else %}
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'home' %}">Home</a>
+                  <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
               {% endif %}
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Work Status
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="{% url 'work_status_add' %}">Add Today's Work</a></li>
-                  <li><a class="dropdown-item" href="{% url 'work_status_list' %}">View Work Status</a></li>
-                </ul>
-              </li>
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Pending Work
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="{% url 'pending_list' %}">View Pending Work</a></li>
-                  <li><a class="dropdown-item" href="{% url 'pending_add' %}">Add Pending Work</a></li>
-                </ul>
-              </li>
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Attendance
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="{% url 'attendance_take' %}">Take Attendance</a></li>
-                  <li><a class="dropdown-item" href="{% url 'attendance_history' %}">Attendance History</a></li>
-                </ul>
-              </li>
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Profile
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><span class="dropdown-item-text text-secondary">{{ user.username }}</span></li>
-                  <li><hr class="dropdown-divider" /></li>
-                  <li>
-                    <form method="post" action="{% url 'logout' %}" class="m-0">
-                      {% csrf_token %}
-                      <button type="submit" class="dropdown-item">Logout</button>
-                    </form>
-                  </li>
-                </ul>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Login</a>
-              </li>
-            {% endif %}
-          </ul>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    {% endblock %}
 
-    <main class="container py-4">
+    <main class="{% block main_class %}container py-4 app-surface{% endblock %}">
       {% if messages %}
         {% for message in messages %}
           <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">
@@ -139,5 +222,50 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+
+    {% if user.is_authenticated %}
+      <script>
+        (function () {
+          var IDLE_MS = 5 * 60 * 1000;
+          var TOUCH_THROTTLE_MS = 60 * 1000;
+          var touchUrl = "{% url 'session_touch' %}";
+          var loginUrl = "{% url 'login' %}";
+
+          var idleTimer = null;
+          var lastTouchSentAt = 0;
+
+          function sendTouchIfNeeded() {
+            var now = Date.now();
+            if (now - lastTouchSentAt < TOUCH_THROTTLE_MS) return;
+            lastTouchSentAt = now;
+            fetch(touchUrl, {
+              method: "GET",
+              credentials: "same-origin",
+              cache: "no-store",
+              headers: { "X-Requested-With": "XMLHttpRequest" },
+            }).catch(function () {
+              // ignore
+            });
+          }
+
+          function redirectToLogin() {
+            var next = window.location.pathname + window.location.search;
+            window.location.href = loginUrl + "?next=" + encodeURIComponent(next);
+          }
+
+          function resetIdleTimer() {
+            if (idleTimer) window.clearTimeout(idleTimer);
+            idleTimer = window.setTimeout(redirectToLogin, IDLE_MS);
+            sendTouchIfNeeded();
+          }
+
+          ["mousemove", "mousedown", "keydown", "touchstart", "scroll"].forEach(function (evt) {
+            window.addEventListener(evt, resetIdleTimer, { passive: true });
+          });
+
+          resetIdleTimer();
+        })();
+      </script>
+    {% endif %}
   </body>
 </html>

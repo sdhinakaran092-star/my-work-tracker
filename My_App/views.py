@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_GET
 
 from datetime import timedelta
 
@@ -12,6 +13,13 @@ from clinic.models import PendingWork
 
 from .forms import WorkStatusForm
 from .models import Attendance, WorkStatus
+
+
+@login_required
+@require_GET
+def session_touch(request):
+    request.session["last_activity_ts"] = int(timezone.now().timestamp())
+    return JsonResponse({"ok": True})
 
 
 @login_required

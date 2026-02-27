@@ -1,45 +1,145 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}Login | My Work Tracker{% endblock %}
 
+{% block navbar %}{% endblock %}
+
+{% block body_style %}
+  <style>
+    body { padding-top: 0; }
+  </style>
+{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block main_class %}p-0{% endblock %}
+
+{% block extra_head %}
+  <style>
+    .login-bg {
+      min-height: 100vh;
+      background-image:
+        linear-gradient(rgba(8, 20, 55, .55), rgba(8, 20, 55, .55)),
+        url("https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=2400&q=80");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .login-hero {
+      padding-top: 120px;
+      padding-bottom: 48px;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .28);
+    }
+
+    .glass-input {
+      background: rgba(255, 255, 255, .90);
+      border: 1px solid rgba(255, 255, 255, .65);
+    }
+
+    .glass-addon {
+      background: rgba(255, 255, 255, .90);
+      border: 1px solid rgba(255, 255, 255, .65);
+    }
+
+    .login-title { letter-spacing: .2px; }
+  </style>
+{% endblock %}
+
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-5">
-      <div class="card shadow-sm rounded-4">
-        <div class="card-body p-4">
-          <h1 class="h4 mb-1">Login</h1>
-          <p class="text-secondary mb-4">Sign in to continue.</p>
+  <div class="login-bg">
+    <div class="container login-hero text-center text-white">
+      <h1 class="display-5 fw-semibold login-title mb-2">Welcome Back!</h1>
+      <div class="text-white-50">Please sign in to your account</div>
+    </div>
 
-          {% if form.errors %}
-            <div class="alert alert-danger" role="alert">
-              Please check your username and password.
-            </div>
-          {% endif %}
-
-          <form method="post" novalidate>
-            {% csrf_token %}
-
-            <div class="mb-3">
-              <label class="form-label" for="id_username">Username</label>
-              <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" class="form-control" required id="id_username" />
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label" for="id_password">Password</label>
-              <input type="password" name="password" autocomplete="current-password" class="form-control" required id="id_password" />
-            </div>
-
-            {% if next %}
-              <input type="hidden" name="next" value="{{ next }}" />
+    <div class="container pb-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+          <div class="glass-card rounded-4 p-4 p-md-5">
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ form.non_field_errors|striptags }}
+              </div>
+            {% elif form.errors %}
+              <div class="alert alert-danger" role="alert">
+                Please check your username and password.
+              </div>
             {% endif %}
 
-            <button type="submit" class="btn btn-primary w-100">Sign in</button>
-          </form>
-        </div>
-      </div>
+            <form method="post" novalidate>
+              {% csrf_token %}
 
-      <div class="text-secondary small mt-3">
-         
+              <div class="input-group input-group-lg mb-3">
+                <span class="input-group-text glass-addon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="text-secondary" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  name="username"
+                  value="{{ form.username.value|default_if_none:'' }}"
+                  autofocus
+                  autocapitalize="none"
+                  autocomplete="username"
+                  class="form-control glass-input {% if form.username.errors %}is-invalid{% endif %}"
+                  required
+                  id="id_username"
+                  placeholder="Username"
+                  aria-label="Username"
+                />
+              </div>
+              {% if form.username.errors %}
+                <div class="text-danger small mb-2">{{ form.username.errors|striptags }}</div>
+              {% endif %}
+
+              <div class="input-group input-group-lg mb-2">
+                <span class="input-group-text glass-addon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="text-secondary" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 0-2 2v4h4V3a2 2 0 0 0-2-2Zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/>
+                  </svg>
+                </span>
+                <input
+                  type="password"
+                  name="password"
+                  autocomplete="current-password"
+                  class="form-control glass-input {% if form.password.errors %}is-invalid{% endif %}"
+                  required
+                  id="id_password"
+                  placeholder="Password"
+                  aria-label="Password"
+                />
+              </div>
+              {% if form.password.errors %}
+                <div class="text-danger small mb-2">{{ form.password.errors|striptags }}</div>
+              {% endif %}
+
+              <div class="text-end mb-4">
+                <span class="text-white-50 small">Forgot Password?</span>
+              </div>
+
+              {% if next %}
+                <input type="hidden" name="next" value="{{ next }}" />
+              {% endif %}
+
+              <button type="submit" class="btn btn-primary w-100 btn-lg">Sign in</button>
+
+              <div class="text-center text-white-50 small mt-4">
+                © {% now "Y" %} My Work Tracker
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
