@@ -14,6 +14,7 @@ urlpatterns = [
         auth_views.LogoutView.as_view(next_page="/login/"),
         name="logout",
     ),
+    path("session/touch/", views.session_touch, name="session_touch"),
     path("", views.home, name="home"),
     path("work-status/", views.work_status_list, name="work_status_list"),
     path("history/", views.work_status_list, name="work_status_history"),
